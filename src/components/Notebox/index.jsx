@@ -23,8 +23,8 @@ class Notebox extends React.Component {
 
         let filteredInput = inputValue.replace(regex, function(matched){
           const trimmedMatchedTable = matched.slice(2,-2).trim().toUpperCase().split('/')
-          const coinProperty = trimmedMatchedTable[0]
-          const coin = trimmedMatchedTable[1]
+          const coinProperty = trimmedMatchedTable[0].trim()
+          const coin = trimmedMatchedTable[1].trim()
           let coinName, coinValue
           infoData.map(item => {
             if(item.symbol === coin) {
