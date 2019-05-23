@@ -21,7 +21,7 @@ class Notebox extends React.Component {
         const value = e.currentTarget.value
         const regex = /\{\{(.*?)\}\}/g
 
-        let filteredInput = inputValue.replace(regex, function(matched){
+        let filteredInput = inputValue.replace(regex, (matched) => {
           const trimmedMatchedTable = matched.slice(2,-2).trim().toUpperCase().split('/')
           const coinProperty = trimmedMatchedTable[0].trim()
           const coin = trimmedMatchedTable[1].trim()
