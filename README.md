@@ -1,6 +1,14 @@
-In the project directory, you can run:
+Run project:
+1) yarn
+2) yarn start
 
-### `npm start` || `yarn start`
+App starts on http://localhost:3000/
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Additional info:
+When writting text type {{ price/btc_symbol }} => ex.  {{ price/BTC}} will show actual price of BTC
+
+few examples:
+
+{{ name/eth }} -> Ethereum
+
+{{ symbol/btc }} -> BTC
