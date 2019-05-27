@@ -11,13 +11,13 @@ class Notebox extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getNotebox();
-        this.props.getExchanges();
+        this.props.fetchCoins()
+        this.props.fetchMarkets()
     }
 
     handleChangeInput = e => {
         const { inputValue } = this.state
-        const { infoData, exchangesData } = this.props
+        const { coins, markets } = this.props
         const value = e.currentTarget.value
         const regex = /\{\{(.*?)\}\}/g
 
@@ -26,7 +26,7 @@ class Notebox extends React.Component {
           const coinProperty = trimmedMatchedTable[0].trim()
           const coin = trimmedMatchedTable[1].trim()
           let coinName, coinValue
-          infoData.map(item => {
+          coins.data.map(item => {
             if(item.symbol === coin) {
               coinName = item.name
             }
@@ -35,9 +35,10 @@ class Notebox extends React.Component {
 
           switch(coinProperty) {
             case 'PRICE':
-              exchangesData.map(item => {
+              markets.data.map(item => {
                 if(item.base_currency_name === coinName) {
-                  coinValue = item.quotes.USD.price
+                  const { price } = item.quotes.USD
+                  coinValue = price
                 }
                 return coinValue
               })
@@ -57,12 +58,22 @@ class Notebox extends React.Component {
     }
 
     render() {
-        const { inputValue, inputValueFiltered } = this.state
-        const { isLoading, isError } = this.props
+        const { 
+          inputValue, 
+          inputValueFiltered 
+        } = this.state
+        const { 
+          isLoading, 
+          isError 
+        } = this.props
         return(
             <NoteboxWrapper>
                 {!isLoading && !isError &&
-                  <AreaBox value={inputValue} placeholder="Start writting" onChange={this.handleChangeInput} />
+                  <AreaBox 
+                    value={inputValue} 
+                    placeholder="Start writting" 
+                    onChange={this.handleChangeInput} 
+                  />
                 }
                 <ViewBox>{inputValueFiltered}</ViewBox>
             </NoteboxWrapper>
@@ -78,8 +89,8 @@ const mapStateToProps = (state) => {
   
   const mapDispatchToProps = (dispatch) => {
     return {
-      getNotebox: () => dispatch(noteboxActions.getNotebox()),
-      getExchanges: () => dispatch(noteboxActions.getExchanges()),
+      fetchCoins: () => dispatch(noteboxActions.fetchCoins()),
+      fetchMarkets: () => dispatch(noteboxActions.fetchMarkets()),
     }
   }
 

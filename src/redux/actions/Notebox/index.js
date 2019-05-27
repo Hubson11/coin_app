@@ -1,78 +1,31 @@
 import * as constants from '../../constants';
 import fetch from 'isomorphic-fetch';
 
-export function getNoteboxStart() {
-    return {
-        type: constants.GET_NOTEBOX_START,
-    }
-}
+const getDataAction = (name, thunk) => () => {
+    return dispatch => {
+      dispatch({ type: `FETCH_${name}_STARTED` });
+  
+      return dispatch(thunk)
+        .then(data => data.json())
+        .then(json => dispatch({ type: `FETCH_${name}_SUCCESS`, payload: json }))
+        .catch(err => dispatch({ type: `FETCH_${name}_ERROR`, payload: err }));
+    };
+  };
 
-export function getNoteboxSuccess(data) {
-    return {
-        payload: {
-            data
-        },
-        type: constants.GET_NOTEBOX_SUCCESS,
+  export const fetchCoins = getDataAction(
+    "COINS",
+    (dispatch, getState) => {
+      return fetch(
+          constants.proxyUrl + constants.targetUrl + 'coins'
+      );
     }
-}
+  );
 
-export function getNoteboxError(error) {
-    return {
-        payload: {
-            error
-        },
-        type: constants.GET_NOTEBOX_ERROR,
+  export const fetchMarkets = getDataAction(
+    "MARKETS",
+    (dispatch, getState) => {
+      return fetch(
+          constants.proxyUrl + constants.targetUrl + 'exchanges/binance/markets'
+      );
     }
-}
-
-export function getExchangesSuccess(data) {
-    return {
-        payload: {
-            data
-        },
-        type: constants.GET_EXCHANGES_SUCCESS,
-    }
-}
-
-export function getExchanges() {
-    return (dispatch) => {
-        dispatch(getNoteboxStart());
-    
-        fetch(constants.proxyUrl + constants.targetUrl + 'exchanges/binance/markets', {
-            // mode: 'no-cors',
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-            }})
-            .then(blob => blob.json())
-            .then(data => {
-                dispatch(getExchangesSuccess(data))
-            })
-            .catch(e => {
-                dispatch(getNoteboxError(e))
-                console.log(e);
-                return e;
-           })
-    }
-}
-
-export function getNotebox() {
-    return (dispatch) => {
-        dispatch(getNoteboxStart());
-        fetch(constants.proxyUrl + constants.targetUrl + 'coins', {
-            // mode: 'no-cors',
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-            }})
-            .then(blob => blob.json())
-            .then(data => {
-                dispatch(getNoteboxSuccess(data))
-            })
-            .catch(e => {
-                dispatch(getNoteboxError(e))
-                console.log(e);
-                return e;
-           })
-    }
-}
+  );
