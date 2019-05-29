@@ -16,12 +16,10 @@ class Notebox extends React.Component {
     }
 
     handleChangeInput = e => {
-        const { inputValue } = this.state
         const { coins, markets } = this.props
         const value = e.currentTarget.value
         const regex = /\{\{(.*?)\}\}/g
-
-        let filteredInput = inputValue.replace(regex, (matched) => {
+        let filteredInput = value.replace(regex, (matched) => {
           const trimmedMatchedTable = matched.slice(2,-2).trim().toUpperCase().split('/')
           const coinProperty = trimmedMatchedTable[0].trim()
           const coin = trimmedMatchedTable[1].trim()
@@ -52,8 +50,8 @@ class Notebox extends React.Component {
           }
         })
         this.setState({
-          inputValue: value,
           inputValueFiltered: filteredInput,
+          inputValue: value,
         })
     }
 
